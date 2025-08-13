@@ -2,7 +2,9 @@
 
 ## Overview
 
-This is a marketing landing page for Purbanchal University's Post Graduate Diploma in Artificial Intelligence program. The application is designed to showcase a comprehensive 30-credit hour AI program targeted at non-science graduates who want to enter the AI field. The landing page provides information about the program curriculum, eligibility requirements, career pathways, and includes an inquiry form for prospective students to express interest.
+This is a comprehensive web application for Purbanchal University's Post Graduate Diploma in Artificial Intelligence program. The application serves as both an academic planning tool and a showcase portal for a 30-credit hour, 1-year program designed for non-science graduates, featuring practical Python-based courses across two semesters with specific focus on AI applications in marketing, operations, and supply chain management.
+
+**Recent Major Update (January 2025)**: Successfully converted from React/Express/PostgreSQL architecture to Flask backend and Streamlit frontend for easier deployment and maintenance while preserving all functionality.
 
 ## User Preferences
 
@@ -10,64 +12,79 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend Architecture
-The frontend is built using **React** with **TypeScript** and follows a modern component-based architecture:
+### Frontend Architecture (Streamlit)
+The frontend is built using **Streamlit** providing an interactive web interface:
 
-- **Single Page Application (SPA)**: Uses Wouter for lightweight client-side routing with smooth scrolling navigation between sections
-- **Component Organization**: Modular components organized by feature (hero, curriculum, contact, eligibility, etc.) for maintainability
-- **UI Framework**: Built on shadcn/ui component library with Radix UI primitives for accessibility and consistent design patterns
-- **Styling**: Tailwind CSS with custom design system including academic-themed color variables and responsive design
-- **State Management**: React Query for server state management and local React state for UI interactions
-- **Form Handling**: React Hook Form with Zod validation for type-safe form processing and error handling
+- **Multi-Page Application**: Navigation sidebar with dedicated pages for Home, Program Overview, Curriculum, Eligibility, Career Paths, and Contact
+- **Interactive Components**: Course expansion, semester tabs, view mode toggles (Overview/Detailed)
+- **Custom Styling**: Academic-themed CSS with university branding, responsive design, and professional color scheme
+- **Download Integration**: Seamless file downloads for syllabi and program materials
+- **Form Handling**: Built-in Streamlit forms with validation for student inquiries
 
-### Backend Architecture
-The backend uses **Express.js** with TypeScript following a RESTful API pattern:
+### Backend Architecture (Flask)
+The backend uses **Flask** with Python following a RESTful API pattern:
 
-- **API Routes**: Simple REST endpoints for inquiry management (`POST /api/inquiries`, `GET /api/inquiries`)
-- **Data Validation**: Drizzle-Zod integration for runtime type validation ensuring data integrity
-- **Storage Layer**: Abstracted storage interface allowing switching between in-memory and database implementations
-- **Error Handling**: Centralized error handling middleware with structured error responses and proper HTTP status codes
-- **Development Tools**: Vite integration for hot module replacement and seamless development experience
+- **API Routes**: REST endpoints for inquiry management, course data, and file downloads
+- **CORS Integration**: Cross-origin resource sharing enabled for frontend communication
+- **Data Validation**: Request validation with proper error handling and HTTP status codes
+- **File Generation**: Dynamic syllabus and brochure generation for downloads
+- **Database Integration**: SQLite database with automatic schema creation
 
 ### Data Storage Solutions
-The application implements a flexible dual-storage approach:
+The application uses a simplified database approach:
 
-- **In-Memory Storage**: MemStorage class for development and testing with UUID-based record identification
-- **Database Ready**: Drizzle ORM configured for PostgreSQL with Neon Database serverless connection
-- **Schema Design**: Simple inquiries table capturing student information (name, email, phone, education background, message)
-- **Migration Support**: Drizzle-kit configuration for database schema migrations and version control
+- **SQLite Database**: Lightweight file-based database (`ai_diploma.db`) for development and production
+- **Auto-Schema Creation**: Database tables created automatically on first run
+- **Inquiry Management**: Student inquiry storage with comprehensive field capture
+- **Course Data**: Structured course information with detailed syllabi stored in application code
 
 ### Design Patterns
-- **Repository Pattern**: Storage interface (`IStorage`) allows seamless switching between memory and database implementations
-- **Component Composition**: Reusable UI components following single responsibility principle with clear prop interfaces
-- **Configuration-driven**: Centralized configuration for database connections and environment variables
-- **Type Safety**: End-to-end TypeScript with shared schema definitions between client and server ensuring consistency
+- **API-First Architecture**: Clear separation between Flask backend API and Streamlit frontend
+- **Component-Based UI**: Streamlit pages and sections organized by feature (hero, curriculum, contact, etc.)
+- **Configuration-Driven**: Environment variables for API URLs and deployment settings
+- **Service Layer**: Dedicated functions for file generation, downloads, and data processing
 
 ## External Dependencies
 
 ### Core Frameworks
-- **React 18**: Frontend framework with modern hooks and concurrent features for optimal performance
-- **Express.js**: Backend web framework for Node.js with middleware support for API development
-- **Vite**: Modern build tool providing fast development server and optimized production builds
+- **Flask 3.1.1**: Lightweight Python web framework for API development
+- **Streamlit 1.48.0**: Modern Python framework for interactive web applications
+- **SQLite**: Built-in Python database for data persistence
 
-### Database & ORM
-- **Drizzle ORM**: Type-safe SQL toolkit with PostgreSQL dialect for database operations
-- **Neon Database**: Serverless PostgreSQL database with auto-scaling capabilities
-- **Drizzle-Kit**: Database migration and schema management tool
+### Networking & Integration
+- **Flask-CORS 6.0.1**: Cross-Origin Resource Sharing support for API communication
+- **Requests 2.32.4**: HTTP library for API communication between frontend and backend
 
-### UI Components & Styling
-- **shadcn/ui**: High-quality component library built on Radix UI primitives
-- **Radix UI**: Comprehensive collection of accessible UI components (dialogs, forms, navigation)
-- **Tailwind CSS**: Utility-first CSS framework with custom design tokens and responsive utilities
-- **Lucide React**: Icon library providing consistent iconography throughout the application
+### Data Handling
+- **Pandas 2.3.1**: Data manipulation and analysis (included with Streamlit)
+- **NumPy 2.3.2**: Numerical computing support
+- **Python Standard Library**: JSON, SQLite3, UUID, datetime for core functionality
 
-### Development & Tooling
-- **TypeScript**: Static typing for enhanced developer experience and runtime safety
-- **ESBuild**: Fast JavaScript bundler for production builds
-- **PostCSS**: CSS processing tool with Tailwind CSS and Autoprefixer plugins
-- **React Hook Form**: Performant form library with validation integration
-- **Zod**: TypeScript-first schema validation for runtime type checking
+### Deployment & Development
+- **Python 3.11**: Modern Python runtime with enhanced performance
+- **Threading**: Multi-service application startup and management
+- **Subprocess**: Service orchestration and process management
 
-### State Management & Data Fetching
-- **TanStack React Query**: Server state management with caching, synchronization, and background updates
-- **Wouter**: Minimalist client-side routing library for single-page application navigation
+## Deployment Configuration
+
+### Application Structure
+- **flask_app.py**: Main Flask API server with all endpoints and database logic
+- **streamlit_app.py**: Complete Streamlit frontend with all pages and functionality
+- **start_app.py**: Combined launcher for both services
+- **run_flask.py**: Standalone Flask server launcher
+- **run_streamlit.py**: Standalone Streamlit application launcher
+
+### Available Endpoints
+- **POST /api/inquiries**: Student inquiry submission
+- **GET /api/inquiries**: Retrieve all inquiries
+- **GET /api/courses**: Course data retrieval with semester filtering
+- **GET /api/download/syllabus/<course_id>**: Individual course syllabus download
+- **GET /api/download/all-syllabi**: Complete curriculum package download
+- **GET /api/download/brochure**: Program brochure download
+
+### Enhanced Features Added (January 2025)
+- **Detailed Course Syllabi**: Comprehensive course information with objectives, prerequisites, learning outcomes, and assessment methods
+- **Download Functionality**: Individual and bulk syllabus downloads, program brochure download
+- **Interactive Curriculum Browser**: Overview and detailed view modes with expandable course information
+- **Complete API Integration**: RESTful endpoints for all data operations and file downloads
+- **Professional Styling**: Academic-themed design with university branding and responsive layout
